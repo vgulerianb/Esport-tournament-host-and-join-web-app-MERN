@@ -4,3 +4,4 @@ server/node_modules
 server/config/keys.js
 client/build
 server/build
+esport-mern-app/server/config/keys.js
