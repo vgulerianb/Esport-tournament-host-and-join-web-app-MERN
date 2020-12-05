@@ -1,0 +1,6 @@
+package-lock.json
+client/node_modules
+server/node_modules
+server/config/keys.js
+client/build
+server/build
