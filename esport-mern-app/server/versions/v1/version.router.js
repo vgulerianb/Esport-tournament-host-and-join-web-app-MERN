@@ -7,6 +7,6 @@ router.get("/", function(req, res) {
 });
 
 //All Route Paths
-router.use("/login", userRouter);
+router.use("/user", userRouter);
 
 module.exports = router;

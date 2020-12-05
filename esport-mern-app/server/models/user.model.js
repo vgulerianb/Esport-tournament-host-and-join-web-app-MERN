@@ -19,6 +19,30 @@ const UsersSchema = new Schema(
             type: String,
             required: true
         },
+        jid: {
+            type: String,
+            required: false
+        },
+        verificationStatus: {
+            type: Number,
+            required: false
+        },
+        v_code: {
+            type: String,
+            required: false
+        },
+        r_code: {
+            type: String,
+            required: false
+        },
+        r_valid: {
+            type: Number,
+            required: false
+        },
+        userrole: {
+            type: String,
+            required: false
+        },
     },
     { versionKey: false }
 );
