@@ -1,5 +1,6 @@
 const UserModel = require("../../../models/user.model");
 const { decrypt, generateToken, encrypt } = require("../../../utils/common.util")
+const jwt_decode = require("jwt-decode");
 
 const loginUser = async (req, res) => {
     const params = req.params;
@@ -10,7 +11,7 @@ const loginUser = async (req, res) => {
         const user = await UserModel.findOne({ 'username': request['username'] });
         if (user && request['password'] === decrypt(user['password'])) {
             if (user['verificationStatus'] === 1) {
-                let user_token = generateToken({ 'username': user['username'], 'uid': user['uid'] });
+                let user_token = generateToken({ 'username': user['username'], 'uid': user['uid'], 'role': user['userrole'] });
                 await UserModel.findOneAndUpdate({ 'username': request['username'] }, { jid: user_token['jid'] });
                 return res.json({ status: true, message: "Success", data: { user_token: user_token['token'] } });
             }
@@ -56,6 +57,8 @@ const verifyUser = async (req, res) => {
     const bodyParams = req.body;
     const request = { ...params, ...queryParams, ...bodyParams };
     if (request && request['username'] && request['v_code']) {
+        let token = req.headers['x-access-token'] || req.headers['authorization'];
+
         const user = await UserModel.findOneAndUpdate({ 'username': request['username'], 'v_code': request['v_code'] }, { verificationStatus: 1 });
         if (user)
             return res.json({ status: true, message: "Verification Successfull" });
@@ -104,8 +107,10 @@ const changePassword = async (req, res) => {
     const queryParams = req.query;
     const bodyParams = req.body;
     const request = { ...params, ...queryParams, ...bodyParams };
-    if (request && request['username'] && request['old_pass'], request['new_pass']) {
-        const user = await UserModel.findOneAndUpdate({ 'username': request['username'], 'password': encrypt(request['old_pass']) }, { 'password': encrypt(request['new_pass']) });
+    if (request && request['old_pass'], request['new_pass']) {
+        let token = req.headers['x-access-token'] || req.headers['authorization'];
+        let decodedToken = jwt_decode(token)
+        const user = await UserModel.findOneAndUpdate({ 'username': decodedToken['username'], 'password': encrypt(request['old_pass']) }, { 'password': encrypt(request['new_pass']) });
         if (user)
             return res.json({ status: true, message: "Password changed successfull" });
         return res.json({ status: false, message: "Invalid old password" });
