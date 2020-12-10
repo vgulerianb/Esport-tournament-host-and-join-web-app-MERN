@@ -34,7 +34,7 @@ const signUpUser = async (req, res) => {
             let uid = await UserModel.findOne({}, { uid: 1 }).sort({ _id: -1 }).limit(1)
             if (uid['uid'] && !isNaN(uid['uid'])) {
                 request['uid'] = uid['uid'] + 1;
-                request['userrole'] = 'user';
+                request['userrole'] = request['mode'] && request['mode'] === 1 ? 'vendor' : 'user';
                 request['uid'] = uid['uid'] + 1;
                 request['password'] = encrypt(request['password']);
                 request['verification_status'] = 0;
