@@ -11,8 +11,10 @@ const loginUser = async (req, res) => {
         const user = await UserModel.findOne({ 'username': request['username'] });
         if (user && request['password'] === decrypt(user['password'])) {
             if (user['verificationStatus'] === 1) {
+                let existingSessions = user['jid'] ? user['jid'] : [];
                 let user_token = generateToken({ 'username': user['username'], 'uid': user['uid'], 'role': user['userrole'] });
-                await UserModel.findOneAndUpdate({ 'username': request['username'] }, { jid: user_token['jid'] });
+                existingSessions.push(user_token['jid'])
+                await UserModel.findOneAndUpdate({ 'username': request['username'] }, { jid: existingSessions });
                 return res.json({ status: true, message: "Success", data: { user_token: user_token['token'] } });
             }
             return res.json({ status: false, message: "Please verify your email address" });
@@ -57,8 +59,6 @@ const verifyUser = async (req, res) => {
     const bodyParams = req.body;
     const request = { ...params, ...queryParams, ...bodyParams };
     if (request && request['username'] && request['v_code']) {
-        let token = req.headers['x-access-token'] || req.headers['authorization'];
-
         const user = await UserModel.findOneAndUpdate({ 'username': request['username'], 'v_code': request['v_code'] }, { verificationStatus: 1 });
         if (user)
             return res.json({ status: true, message: "Verification Successfull" });
@@ -107,9 +107,8 @@ const changePassword = async (req, res) => {
     const queryParams = req.query;
     const bodyParams = req.body;
     const request = { ...params, ...queryParams, ...bodyParams };
-    if (request && request['old_pass'], request['new_pass']) {
-        let token = req.headers['x-access-token'] || req.headers['authorization'];
-        let decodedToken = jwt_decode(token)
+    if (request && request['old_pass'], request['new_pass'] && req.token) {
+        let decodedToken = req.token;
         const user = await UserModel.findOneAndUpdate({ 'username': decodedToken['username'], 'password': encrypt(request['old_pass']) }, { 'password': encrypt(request['new_pass']) });
         if (user)
             return res.json({ status: true, message: "Password changed successfull" });
@@ -119,4 +118,23 @@ const changePassword = async (req, res) => {
     }
 };
 
-module.exports = { loginUser, signUpUser, verifyUser, changePassword, resetPassword, forgetPassword };
+//Function to invalidate jwt token after logout
+const invalidateToken = async (req, res) => {
+    if (req.token) {
+        const user = await UserModel.findOne({ 'jid': req.token['jid'] }, { 'jid': 1 });
+        if (user && user.jid) {
+            const index = user.jid.indexOf(req.token['jid']);
+            let activeSessions = user.jid;
+            if (index > -1) {
+                activeSessions.splice(index, 1);
+            }
+            await UserModel.findOneAndUpdate({ 'jid': req.token['jid'] }, { 'jid': activeSessions });
+            return res.json({ status: true, message: "Logged out successfully" });
+        }
+        return res.json({ status: false, message: "Unable to invalidate session" });
+    } else {
+        return res.json({ status: false, message: "Parameters Missing" });
+    }
+};
+
+module.exports = { loginUser, signUpUser, verifyUser, changePassword, resetPassword, forgetPassword, invalidateToken };
