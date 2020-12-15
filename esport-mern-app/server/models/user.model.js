@@ -20,7 +20,7 @@ const UsersSchema = new Schema(
             required: true
         },
         jid: {
-            type: String,
+            type: Object,
             required: false
         },
         verificationStatus: {
