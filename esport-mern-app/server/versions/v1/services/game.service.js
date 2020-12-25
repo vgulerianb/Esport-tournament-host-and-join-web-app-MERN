@@ -32,5 +32,21 @@ const createGame = async (req, res) => {
     return res.json({ status: false, message: "Something went wrong" })
 };
 
+const EditGame = async (req, res) => {
+    const params = req.params;
+    const queryParams = req.query;
+    const bodyParams = req.body;
+    const request = { ...params, ...queryParams, ...bodyParams };
+    if (request && req['token']['uid'] && request['game_id']) {
+        let game_id = await GameModal.findOneAndUpdate({ game_id: request['game_id'], created_by: req['token']['uid'] }, request)
+        if (game_id)
+            return res.json({ status: true, message: "Game updated successfully" })
+        else
+            return res.json({ status: false, message: "Something went wrong, provided game id maybe invalid or you donot have access to edit this game" })
 
-module.exports = { getGames, createGame };
+    }
+    return res.json({ status: false, message: "Required parameters missing" })
+};
+
+
+module.exports = { getGames, createGame, EditGame };
