@@ -74,7 +74,7 @@ const forgetPassword = async (req, res) => {
     const bodyParams = req.body;
     const request = { ...params, ...queryParams, ...bodyParams };
     if (request && request['username']) {
-        let reset_code = request['username'] + "_" + Math.random().toString(36).substring(7) + Math.round(Math.random() * 100000) + "_" + new Date().getTime();
+        let reset_code = request['username'] + "_" + Math.random().toString(36).substring(2) + Math.round(Math.random() * 100000) + "_" + new Date().getTime();
         //Todo: mail reset code to user
         let validity = Math.round((new Date().getTime() / 1000) + 3600);
         const user = await UserModel.findOneAndUpdate({ 'username': request['username'] }, { r_code: reset_code, r_valid: validity });

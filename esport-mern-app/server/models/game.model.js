@@ -23,6 +23,10 @@ const GamesSchema = new Schema(
             type: String,
             required: false
         },
+        game_type: {
+            type: String,
+            required: false
+        },
         start_time: {
             type: Number,
             required: false
@@ -32,6 +36,10 @@ const GamesSchema = new Schema(
             required: false
         },
         join_code: {
+            type: String,
+            required: false
+        },
+        private_code: {
             type: String,
             required: false
         }
