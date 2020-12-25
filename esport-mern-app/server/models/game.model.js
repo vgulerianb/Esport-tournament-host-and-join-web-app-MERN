@@ -39,7 +39,7 @@ const GamesSchema = new Schema(
             type: String,
             required: false
         },
-        private_code: {
+        invite_code: {
             type: String,
             required: false
         }
