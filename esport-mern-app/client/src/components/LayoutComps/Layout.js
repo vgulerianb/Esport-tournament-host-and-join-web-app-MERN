@@ -16,13 +16,13 @@ export class Layout extends Component {
 
     render() {
         return (
-            <>
+            <div>
                 <Header />
                 <div className="layoutBody" style={{ padding: '50px' }} >
                     {this.props.children}
                 </div>
                 <Footer />
-            </>
+            </div>
         );
     }
 }
