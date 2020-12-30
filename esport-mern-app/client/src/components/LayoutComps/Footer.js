@@ -7,7 +7,7 @@ export class Footer extends Component {
             <>
                 <div className="footer-container">
                     <div className="footer-copyrights">
-                        &copy; No copyrights.
+                        &copy; VG
                     </div>
                 </div>
                 <style jsx>
