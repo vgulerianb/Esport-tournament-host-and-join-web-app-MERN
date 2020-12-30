@@ -19,93 +19,99 @@ export default function SignUp(props) {
         <div
           style={{
             position: "relative",
-            background: "#fe8d1b",
-            width: "191px",
-            height: "191px",
-            top: "20px",
-            right: "-170px",
-            "z-index": 1,
-            "border-radius": "15px",
           }}
-        ></div>
-        <div className="formHolder">
-          <h2 style={{ "text-align": "center" }}>Register</h2>
-          <Form
-            name="basic"
-            initialValues={{
-              remember: true,
+        >
+          <div
+            style={{
+              position: "absolute",
+              background: "rgb(254, 141, 27) none repeat scroll 0% 0%",
+              width: "191px",
+              height: "191px",
+              top: "30px",
+              left: "-12px",
+              "border-radius": "15px",
+              "z-index": 0,
             }}
-            onFinish={() => {}}
-            onFinishFailed={null}
-          >
-            <Form.Item
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your username!",
-                },
-              ]}
+          ></div>
+          <div className="formHolder">
+            <h2 style={{ "text-align": "center" }}>Register</h2>
+            <Form
+              name="basic"
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={() => {}}
+              onFinishFailed={null}
             >
-              <Input placeholder="Username" />
-            </Form.Item>
-            <Form.Item
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your username!",
-                },
-              ]}
-            >
-              <Input placeholder="First Name" />
-            </Form.Item>
-            <Form.Item
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your username!",
-                },
-              ]}
-            >
-              <Input placeholder="Last Name" />
-            </Form.Item>
-            <Form.Item
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your username!",
-                },
-              ]}
-            >
-              <Input placeholder="Email" />
-            </Form.Item>
-
-            <Form.Item
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your password!",
-                },
-              ]}
-            >
-              <Input.Password placeholder="Password" />
-            </Form.Item>
-
-            <Form.Item>
-              <Button
-                type="primary"
-                className="primaryBtn-2"
-                style={{ width: "100%" }}
-                htmlType="submit"
+              <Form.Item
+                name="username"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your username!",
+                  },
+                ]}
               >
-                Submit
-              </Button>
-            </Form.Item>
-          </Form>
+                <Input placeholder="Username" />
+              </Form.Item>
+              <Form.Item
+                name="username"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your username!",
+                  },
+                ]}
+              >
+                <Input placeholder="First Name" />
+              </Form.Item>
+              <Form.Item
+                name="username"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your username!",
+                  },
+                ]}
+              >
+                <Input placeholder="Last Name" />
+              </Form.Item>
+              <Form.Item
+                name="username"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your username!",
+                  },
+                ]}
+              >
+                <Input placeholder="Email" />
+              </Form.Item>
+
+              <Form.Item
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: "Please input your password!",
+                  },
+                ]}
+              >
+                <Input.Password placeholder="Password" />
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  type="primary"
+                  className="primaryBtn-2"
+                  style={{ width: "100%" }}
+                  htmlType="submit"
+                >
+                  Submit
+                </Button>
+              </Form.Item>
+            </Form>
+          </div>
         </div>
       </div>
       <style jsx>
@@ -115,6 +121,7 @@ export default function SignUp(props) {
             justify-content: center;
           }
           .formHolder {
+            position: relative;
             width: 500px;
             background: #ffffff;
             padding: 100px 50px;
