@@ -1,6 +1,5 @@
 import React, {Component} from "react";
-import axios from "axios";
-import {G_API_URL} from "../constants/constants";
+import Layout from "../components/LayoutComps/Layout";
 
 class Hello extends Component {
     state = {
@@ -13,9 +12,9 @@ class Hello extends Component {
 
     render() {
         return (
-                <>
-                    Hello 
-                </> 
+            <Layout >
+                Hello 
+            </Layout>
         )
     }
 }
