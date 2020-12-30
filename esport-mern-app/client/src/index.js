@@ -1,20 +1,22 @@
 import React from "react";
-import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import {render} from "react-dom";
-
-import Hello from "./pages/hello";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { render } from "react-dom";
+import './index.css';
+import Hello from "./pages/index";
 
 function App() {
     return (
-            <Switch>
-                <Route path={`${process.env.PUBLIC_URL}/`} exact component={Hello}/>
-            </Switch>
+        <Switch>
+            <Route path={`${process.env.PUBLIC_URL}/`} exact component={Hello} />
+
+        </Switch>
+
     );
 }
 
 render(
     <Router>
-        <App/>
+        <App />
     </Router>,
     document.getElementById("root")
 );

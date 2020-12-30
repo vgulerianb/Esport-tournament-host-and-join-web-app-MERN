@@ -1,0 +1,21 @@
+.primaryBtn-1 {
+  cursor: pointer;
+  padding: 0px 25px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  border: 1px solid #fe8d1b;
+  color: #fe8d1b;
+}
+
+.primaryBtn-2 {
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0px 25px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  background: #fe8d1b;
+  color: #ffffff;
+}
