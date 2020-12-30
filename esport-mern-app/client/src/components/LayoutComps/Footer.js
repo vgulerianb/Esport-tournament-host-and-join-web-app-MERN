@@ -7,7 +7,7 @@ export class Footer extends Component {
             <>
                 <div className="footer-container">
                     <div className="footer-copyrights">
-                        &copy; No copyrights.
+                        &copy; VG
                     </div>
                 </div>
                 <style jsx>
@@ -19,7 +19,7 @@ export class Footer extends Component {
                             left: 0;
                             right: 0;
                             padding: 50px;
-                        }
+                           }
                         .footer-copyrights {
                             text-align: center;
                         }

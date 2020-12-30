@@ -3,12 +3,16 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { render } from "react-dom";
 import './index.css';
 import Hello from "./pages/index";
+import SignIn from "./pages/login";
+import SignUp from "./pages/signUp";
+import 'antd/dist/antd.css'
 
 function App() {
     return (
         <Switch>
             <Route path={`${process.env.PUBLIC_URL}/`} exact component={Hello} />
-
+            <Route path={`${process.env.PUBLIC_URL}/login`} exact component={SignIn} />
+            <Route path={`${process.env.PUBLIC_URL}/signup`} exact component={SignUp} />
         </Switch>
 
     );
