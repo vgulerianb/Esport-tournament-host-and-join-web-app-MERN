@@ -1,17 +1,51 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/LayoutComps/Layout";
 import { Form, Input, Button } from "antd";
+import axios from "axios";
+import { G_API_URL } from "../constants/constants";
+import { check_login, login_user, showNotification } from "../utils/user.util";
+import { useHistory } from "react-router-dom";
 
 export default function SignIn(props) {
-  const [showErrorMsg, setErrorMsg] = useState("");
+  const [loggingIn, setLoggingIn] = useState(false);
+  const history = useHistory();
+
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
   };
 
   useEffect(() => {
-    console.log("hello");
+    if (check_login()) {
+      history.push(process.env.PUBLIC_URL);
+    }
   });
+
+  const loginUser = (values) => {
+    setLoggingIn(true);
+    axios
+      .post(G_API_URL + "user/login", values)
+      .then((res) => {
+        setLoggingIn(false);
+        if (res.data.status) {
+          showNotification("success", "You are logged in successfully");
+          login_user(res.data.data);
+          history.push(process.env.PUBLIC_URL);
+        } else
+          showNotification(
+            "info",
+            "Account not found, please check your username or password"
+          );
+      })
+      .catch(() => {
+        setLoggingIn(false);
+        showNotification();
+      });
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
 
   return (
     <Layout>
@@ -36,8 +70,8 @@ export default function SignIn(props) {
               initialValues={{
                 remember: true,
               }}
-              onFinish={() => {}}
-              onFinishFailed={null}
+              onFinish={loginUser}
+              onFinishFailed={onFinishFailed}
             >
               <Form.Item
                 name="username"
@@ -69,6 +103,7 @@ export default function SignIn(props) {
                   className="primaryBtn-2"
                   style={{ width: "100%" }}
                   htmlType="submit"
+                  loading={loggingIn}
                 >
                   Submit
                 </Button>

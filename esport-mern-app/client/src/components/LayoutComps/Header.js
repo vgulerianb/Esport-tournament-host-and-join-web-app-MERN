@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { G_HOME_URL } from "../../constants/constants";
 import { useHistory } from 'react-router-dom';
+import { check_login, logout_user } from "../../utils/user.util"
 
 const menu = (
     <>
@@ -28,7 +28,6 @@ const menu = (
 
 const Header = props => {
     const history = useHistory();
-
     return (
         <>
             <div className="navbar-container">
@@ -41,14 +40,15 @@ const Header = props => {
                         </Link>
                     </div>
                 </div>
-                <div className="loggedOutStateOpt" style={{ display: 'flex' }}>
-                    <div className="loginBtn primaryBtn-1" onClick={() => history.push(process.env.PUBLIC_URL + '/login')}>
-                        Log In
+                {!check_login() ?
+                    <div className="loggedOutStateOpt" style={{ display: 'flex' }}>
+                        <div className="loginBtn primaryBtn-1" onClick={() => history.push(process.env.PUBLIC_URL + '/login')}>
+                            Log In
                     </div>
-                    <div className="signUpBtn primaryBtn-2" onClick={() => history.push(process.env.PUBLIC_URL + '/signup')}>
-                        Sign Up
+                        <div className="signUpBtn primaryBtn-2" onClick={() => history.push(process.env.PUBLIC_URL + '/signup')}>
+                            Sign Up
                     </div>
-                </div>
+                    </div> : <div className="primaryBtn-1" onClick={() => { logout_user() }}>Log Out</div>}
 
             </div>
 
