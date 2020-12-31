@@ -1,26 +1,51 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/LayoutComps/Layout";
 import { Form, Input, Button } from "antd";
+import axios from "axios";
+import { G_API_URL } from "../constants/constants";
+import { check_login, login_user, showNotification } from "../utils/user.util";
+import { useHistory } from "react-router-dom";
 
-export default function SignUp(props) {
-  const [showErrorMsg, setErrorMsg] = useState("");
+export default function ForgetPassword(props) {
+  const [loggingIn, setLoggingIn] = useState(false);
+  const history = useHistory();
+
   const layout = {
     labelCol: { span: 8 },
     wrapperCol: { span: 16 },
   };
 
   useEffect(() => {
-    console.log("hello");
+    if (check_login()) {
+      history.push(process.env.PUBLIC_URL);
+    }
   });
+
+  const restorePassword = (values) => {
+    setLoggingIn(true);
+    axios
+      .post(G_API_URL + "user/forget-password", values)
+      .then((res) => {
+        setLoggingIn(false);
+        if (res.data.status) {
+          showNotification("success", "Password reset link sent successfully");
+          history.push(process.env.PUBLIC_URL + "/login");
+        } else showNotification("info", "Account not found");
+      })
+      .catch(() => {
+        setLoggingIn(false);
+        showNotification();
+      });
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
 
   return (
     <Layout>
-      <div className="signUpWrapper">
-        <div
-          style={{
-            position: "relative",
-          }}
-        >
+      <div className="forgetPasswordWrapper">
+        <div style={{ position: "relative" }}>
           <div
             style={{
               position: "absolute",
@@ -34,14 +59,11 @@ export default function SignUp(props) {
             }}
           ></div>
           <div className="formHolder">
-            <h2 style={{ "text-align": "center" }}>Register</h2>
+            <h2 style={{ "text-align": "center" }}>Reset Password</h2>
             <Form
               name="basic"
-              initialValues={{
-                remember: true,
-              }}
-              onFinish={() => {}}
-              onFinishFailed={null}
+              onFinish={restorePassword}
+              onFinishFailed={onFinishFailed}
             >
               <Form.Item
                 name="username"
@@ -54,61 +76,24 @@ export default function SignUp(props) {
               >
                 <Input placeholder="Username" />
               </Form.Item>
-              <Form.Item
-                name="username"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your username!",
-                  },
-                ]}
-              >
-                <Input placeholder="First Name" />
-              </Form.Item>
-              <Form.Item
-                name="username"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your username!",
-                  },
-                ]}
-              >
-                <Input placeholder="Last Name" />
-              </Form.Item>
-              <Form.Item
-                name="username"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your username!",
-                  },
-                ]}
-              >
-                <Input placeholder="Email" />
-              </Form.Item>
-
-              <Form.Item
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your password!",
-                  },
-                ]}
-              >
-                <Input.Password placeholder="Password" />
-              </Form.Item>
-
               <Form.Item>
                 <Button
                   type="primary"
                   className="primaryBtn-2"
                   style={{ width: "100%" }}
                   htmlType="submit"
+                  loading={loggingIn}
                 >
-                  Register
+                  Reset Password
                 </Button>
+                <a
+                  onClick={() => {
+                    history.push(process.env.PUBLIC_URL + "/login");
+                  }}
+                  className="primaryColor"
+                >
+                  Return to Login
+                </a>
               </Form.Item>
             </Form>
           </div>
@@ -116,7 +101,7 @@ export default function SignUp(props) {
       </div>
       <style jsx>
         {`
-          .signUpWrapper {
+          .forgetPasswordWrapper {
             display: flex;
             justify-content: center;
           }

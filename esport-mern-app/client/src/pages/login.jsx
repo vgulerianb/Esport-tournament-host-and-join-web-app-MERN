@@ -105,8 +105,17 @@ export default function SignIn(props) {
                   htmlType="submit"
                   loading={loggingIn}
                 >
-                  Submit
+                  Log In
                 </Button>
+                <br />
+                <a
+                  onClick={() => {
+                    history.push(process.env.PUBLIC_URL + "/forget-password");
+                  }}
+                  className="primaryColor"
+                >
+                  Forgot Password?
+                </a>
               </Form.Item>
             </Form>
           </div>

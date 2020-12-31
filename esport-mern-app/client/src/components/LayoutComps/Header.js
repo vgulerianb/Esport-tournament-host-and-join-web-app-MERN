@@ -9,7 +9,6 @@ const menu = (
 
             <div
                 className="menu-item"
-
             >
                 Profile
             </div>
