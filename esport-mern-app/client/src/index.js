@@ -5,6 +5,7 @@ import './index.css';
 import Hello from "./pages/index";
 import SignIn from "./pages/login";
 import SignUp from "./pages/signUp";
+import ForgetPassword from "./pages/forgetPassword";
 import 'antd/dist/antd.css'
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
             <Route path={`${process.env.PUBLIC_URL}/`} exact component={Hello} />
             <Route path={`${process.env.PUBLIC_URL}/login`} exact component={SignIn} />
             <Route path={`${process.env.PUBLIC_URL}/signup`} exact component={SignUp} />
+            <Route path={`${process.env.PUBLIC_URL}/forget-password`} exact component={ForgetPassword} />
         </Switch>
 
     );

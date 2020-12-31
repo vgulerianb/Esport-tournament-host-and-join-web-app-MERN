@@ -107,7 +107,7 @@ export default function SignUp(props) {
                   style={{ width: "100%" }}
                   htmlType="submit"
                 >
-                  Submit
+                  Register
                 </Button>
               </Form.Item>
             </Form>
