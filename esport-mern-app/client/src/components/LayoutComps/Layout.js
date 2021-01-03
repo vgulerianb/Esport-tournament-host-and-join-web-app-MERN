@@ -16,13 +16,27 @@ export class Layout extends Component {
 
     render() {
         return (
-            <div>
-                <Header />
-                <div className="layoutBody" style={{ padding: '50px' }} >
-                    {this.props.children}
+            <>
+                <div style={{ "height": '100%', display: 'flex', flexDirection: "column" }}>
+                    <div style={{ 'flex': 1 }}>
+                        <Header />
+                    </div>
+                    <div className="layoutBody" style={{ padding: '50px', 'flex': 8 }} >
+                        {this.props.children}
+                    </div>
+                    <div style={{ 'flex': 1 }}>
+                        <Footer />
+                    </div>
                 </div>
-                <Footer />
-            </div>
+                <style jsx>{
+                    `
+                    #root{
+                        height: 100%;
+                    }
+                    `
+                }
+                </style>
+            </>
         );
     }
 }
