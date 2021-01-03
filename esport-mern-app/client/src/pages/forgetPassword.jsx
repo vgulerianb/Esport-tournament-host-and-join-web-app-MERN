@@ -86,6 +86,7 @@ export default function ForgetPassword(props) {
                 >
                   Reset Password
                 </Button>
+                <br />
                 <a
                   onClick={() => {
                     history.push(process.env.PUBLIC_URL + "/login");

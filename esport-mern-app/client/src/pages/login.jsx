@@ -34,7 +34,8 @@ export default function SignIn(props) {
         } else
           showNotification(
             "info",
-            "Account not found, please check your username or password"
+            res?.data?.message ??
+              "Account not found, please check your username or password"
           );
       })
       .catch(() => {
