@@ -1,5 +1,5 @@
 const UserModel = require("../../../models/user.model");
-const { decrypt, generateToken, encrypt } = require("../../../utils/common.util")
+const { decrypt, generateToken, encrypt, send_mail } = require("../../../utils/common.util")
 const jwt_decode = require("jwt-decode");
 
 const loginUser = async (req, res) => {
@@ -75,11 +75,12 @@ const forgetPassword = async (req, res) => {
     const request = { ...params, ...queryParams, ...bodyParams };
     if (request && request['username']) {
         let reset_code = request['username'] + "_" + Math.random().toString(36).substring(2) + Math.round(Math.random() * 100000) + "_" + new Date().getTime();
-        //Todo: mail reset code to user
         let validity = Math.round((new Date().getTime() / 1000) + 3600);
         const user = await UserModel.findOneAndUpdate({ 'username': request['username'] }, { r_code: reset_code, r_valid: validity });
-        if (user)
+        if (user) {
+            send_mail(request['username'], "Reset Password", "Reset Password", "This is description to reset password", "https://mydom.com/" + reset_code, "Reset Password");
             return res.json({ status: true, message: "Reset code sent successfull" });
+        }
         return res.json({ status: false, message: "Something went wrong" });
 
     } else {

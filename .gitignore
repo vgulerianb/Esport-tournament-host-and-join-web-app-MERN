@@ -5,3 +5,4 @@ esport-mern-app/server/config/keys.js
 esport-mern-app/client/build
 esport-mern-app/server/build
 esport-mern-app/server/config/keys.js
+node_modules

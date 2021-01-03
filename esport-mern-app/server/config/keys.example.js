@@ -12,5 +12,9 @@ module.exports = {
             port_2: "",
             replicaSet: ""
         },
+    },
+    mailgun: {
+        apiKey: "",
+        domain: ""
     }
 };
