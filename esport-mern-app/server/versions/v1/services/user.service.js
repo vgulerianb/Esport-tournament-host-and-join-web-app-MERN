@@ -41,7 +41,7 @@ const signUpUser = async (req, res) => {
                 request['password'] = encrypt(request['password']);
                 request['verification_status'] = 0;
                 request['v_code'] = "vcode_" + request['uid'] + "_" + Math.round(Math.random() * 100000) + "_" + new Date().getTime();
-                //Todo: mail v_code to user
+                send_mail(request['username'], "Account Verification Required", "Account Verification", "This is description to Account Verification desc", "http://localhost:5000/verify-account/?vcode=" + request['v_code'], "Reset Password");
                 const user = await UserModel.create(request);
                 return res.json({ status: true, message: "User added successfully" });
             } else
@@ -58,8 +58,8 @@ const verifyUser = async (req, res) => {
     const queryParams = req.query;
     const bodyParams = req.body;
     const request = { ...params, ...queryParams, ...bodyParams };
-    if (request && request['username'] && request['v_code']) {
-        const user = await UserModel.findOneAndUpdate({ 'username': request['username'], 'v_code': request['v_code'] }, { verificationStatus: 1 });
+    if (request && request['v_code']) {
+        const user = await UserModel.findOneAndUpdate({ 'v_code': request['v_code'] }, { verificationStatus: 1 });
         if (user)
             return res.json({ status: true, message: "Verification Successfull" });
         return res.json({ status: false, message: "Something went wrong" });
@@ -78,7 +78,7 @@ const forgetPassword = async (req, res) => {
         let validity = Math.round((new Date().getTime() / 1000) + 3600);
         const user = await UserModel.findOneAndUpdate({ 'username': request['username'] }, { r_code: reset_code, r_valid: validity });
         if (user) {
-            send_mail(request['username'], "Reset Password", "Reset Password", "This is description to reset password", "https://mydom.com/" + reset_code, "Reset Password");
+            send_mail(request['username'], "Reset Password", "Reset Password", "This is description to reset password", "http://localhost:5000/reset-password/?r_code=" + reset_code, "Reset Password");
             return res.json({ status: true, message: "Reset code sent successfull" });
         }
         return res.json({ status: false, message: "Something went wrong" });
