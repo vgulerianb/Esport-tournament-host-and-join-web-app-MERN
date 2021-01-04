@@ -42,4 +42,4 @@ const getToken = () => {
     return localStorage.getItem("u_token")
 };
 
-export { login_user, check_login, logout_user, showNotification };
+export { login_user, check_login, logout_user, showNotification, getToken };

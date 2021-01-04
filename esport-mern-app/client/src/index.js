@@ -7,6 +7,8 @@ import SignIn from "./pages/login";
 import SignUp from "./pages/signUp";
 import ForgetPassword from "./pages/forgetPassword";
 import 'antd/dist/antd.css'
+import ChangePassword from "./pages/changePassword";
+import VerifyAccount from "./pages/verifyAccount";
 
 function App() {
     return (
@@ -15,6 +17,8 @@ function App() {
             <Route path={`${process.env.PUBLIC_URL}/login`} exact component={SignIn} />
             <Route path={`${process.env.PUBLIC_URL}/signup`} exact component={SignUp} />
             <Route path={`${process.env.PUBLIC_URL}/forget-password`} exact component={ForgetPassword} />
+            <Route path={`${process.env.PUBLIC_URL}/verify-account`} exact component={VerifyAccount} />
+            <Route path={`${process.env.PUBLIC_URL}/change-password`} exact component={ChangePassword} />
         </Switch>
 
     );
