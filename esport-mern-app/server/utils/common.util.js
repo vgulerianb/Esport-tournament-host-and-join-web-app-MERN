@@ -32,7 +32,7 @@ const send_mail = (mail, subject, title, body, btn_link, btn_name) => {
   const DOMAIN = keys.mailgun.domain;
   const mg = mailgun({ apiKey: keys.mailgun.apiKey, domain: DOMAIN });
   const data = {
-    from: "Vikrant <postmaster@" + keys.mailgun.domain + ">",
+    from: "Vikrant <vg@" + keys.mailgun.domain + ">",
     to: mail,
     subject: subject,
     template: "esport-action",
