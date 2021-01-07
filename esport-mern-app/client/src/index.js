@@ -10,6 +10,7 @@ import 'antd/dist/antd.css'
 import ChangePassword from "./pages/changePassword";
 import VerifyAccount from "./pages/verifyAccount";
 import NotFound from "./pages/notFound";
+import ResetPassword from "./pages/resetPassword";
 
 function App() {
     return (
@@ -20,6 +21,7 @@ function App() {
             <Route path={`${process.env.PUBLIC_URL}/forget-password`} exact component={ForgetPassword} />
             <Route path={`${process.env.PUBLIC_URL}/verify-account`} exact component={VerifyAccount} />
             <Route path={`${process.env.PUBLIC_URL}/change-password`} exact component={ChangePassword} />
+            <Route path={`${process.env.PUBLIC_URL}/reset-password`} exact component={ResetPassword} />
             <Route exact component={NotFound} />
 
         </Switch>

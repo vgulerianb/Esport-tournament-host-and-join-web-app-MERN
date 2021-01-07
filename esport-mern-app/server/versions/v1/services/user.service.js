@@ -41,7 +41,7 @@ const signUpUser = async (req, res) => {
                 request['password'] = encrypt(request['password']);
                 request['verification_status'] = 0;
                 request['v_code'] = "vcode_" + request['uid'] + "_" + Math.round(Math.random() * 100000) + "_" + new Date().getTime();
-                send_mail(request['username'], "Account Verification Required", "Account Verification", "This is description to Account Verification desc", "http://localhost:5000/verify-account/?vcode=" + request['v_code'], "Reset Password");
+                send_mail(request['username'], "Account Verification Required", "Account Verification", "This is description to Account Verification desc", "http://localhost:5000/verify-account/?vcode=" + request['v_code'], "Verify Account");
                 const user = await UserModel.create(request);
                 return res.json({ status: true, message: "User added successfully" });
             } else
@@ -93,8 +93,8 @@ const resetPassword = async (req, res) => {
     const queryParams = req.query;
     const bodyParams = req.body;
     const request = { ...params, ...queryParams, ...bodyParams };
-    if (request && request['username'] && request['r_code'] && request['password']) {
-        const user = await UserModel.findOneAndUpdate({ 'username': request['username'], 'r_code': request['r_code'], r_valid: { $gt: Math.round(new Date() / 1000) } }, { password: encrypt(request['password']), r_code: "", r_valid: 0 });
+    if (request && request['r_code'] && request['password']) {
+        const user = await UserModel.findOneAndUpdate({ 'r_code': request['r_code'], r_valid: { $gt: Math.round(new Date() / 1000) } }, { password: encrypt(request['password']), r_code: "", r_valid: 0 });
         if (user)
             return res.json({ status: true, message: "Password changed successfull" });
         return res.json({ status: false, message: "Reset code is expired" });
