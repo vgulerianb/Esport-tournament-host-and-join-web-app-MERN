@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/LayoutComps/Layout";
-import { Form, Input, Button } from "antd";
 import axios from "axios";
 import { G_API_URL, G_HOME_URL } from "../constants/constants";
-import { check_login, login_user, showNotification } from "../utils/user.util";
+import { check_login, showNotification } from "../utils/user.util";
 import { useHistory } from "react-router-dom";
 import queryString from "query-string";
 
@@ -24,7 +23,6 @@ export default function VerifyAccount(props) {
       username: params.u_name,
       v_code: params.vcode,
     });
-    console.log(params);
   });
 
   const verifyUser = (values) => {

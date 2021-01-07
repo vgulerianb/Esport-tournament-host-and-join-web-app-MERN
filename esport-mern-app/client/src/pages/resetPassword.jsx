@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/LayoutComps/Layout";
 import { Form, Input, Button } from "antd";
-import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { G_API_URL } from "../constants/constants";
-import { check_login, login_user, showNotification } from "../utils/user.util";
+import { check_login, getToken, showNotification } from "../utils/user.util";
+import { useHistory } from "react-router-dom";
+import queryString from "query-string";
 
-export default function SignUp(props) {
-  const history = useHistory();
+export default function ResetPassword(props) {
   const [loggingIn, setLoggingIn] = useState(false);
+  const history = useHistory();
+
+  const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
+  };
 
   useEffect(() => {
     if (check_login()) {
@@ -16,22 +22,28 @@ export default function SignUp(props) {
     }
   });
 
-  const regiterUser = (values) => {
+  const ChangePass = (values) => {
     setLoggingIn(true);
+    let params = queryString.parse(props.location.search);
     axios
-      .post(G_API_URL + "user/signup", values)
+      .post(
+        G_API_URL + "user/reset-password",
+        { ...values, ...{ r_code: params.r_code } },
+        {
+          headers: {
+            Authorization: getToken(),
+          },
+        }
+      )
       .then((res) => {
         setLoggingIn(false);
         if (res.data.status) {
-          showNotification(
-            "success",
-            "Account created successfully, please check your mail to verify your account"
-          );
-          history.push(process.env.PUBLIC_URL + "/login");
+          showNotification("success", "Password Changed Successfully");
+          history.replace("/login");
         } else
           showNotification(
             "info",
-            res.data.message ?? "Unable to create account"
+            res?.data?.message ?? "Unable to reset password"
           );
       })
       .catch(() => {
@@ -40,14 +52,14 @@ export default function SignUp(props) {
       });
   };
 
+  const onFinishFailed = (errorInfo) => {
+    console.log("Failed:", errorInfo);
+  };
+
   return (
     <Layout>
-      <div className="signUpWrapper">
-        <div
-          style={{
-            position: "relative",
-          }}
-        >
+      <div className="resetPassWrapper">
+        <div style={{ position: "relative" }}>
           <div
             style={{
               position: "absolute",
@@ -61,59 +73,51 @@ export default function SignUp(props) {
             }}
           ></div>
           <div className="formHolder">
-            <h2 style={{ "text-align": "center" }}>Register</h2>
+            <h2 style={{ "text-align": "center" }}>Reset Password</h2>
             <Form
               name="basic"
               initialValues={{
                 remember: true,
               }}
-              onFinish={regiterUser}
+              onFinish={ChangePass}
+              onFinishFailed={onFinishFailed}
             >
               <Form.Item
-                name="username"
+                name="password"
+                hasFeedback
                 rules={[
                   {
                     required: true,
-                    type: "email",
-                    message: "Please enter a valid email",
+                    message: "Please input your new password!",
                   },
+                  { min: 5, message: "Username must be minimum 5 characters." },
                 ]}
               >
-                <Input placeholder="Email" />
-              </Form.Item>
-              <Form.Item
-                name="first_name"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your First Name!",
-                  },
-                ]}
-              >
-                <Input placeholder="First Name" />
-              </Form.Item>
-              <Form.Item
-                name="last_name"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your Last Name!",
-                  },
-                ]}
-              >
-                <Input placeholder="Last Name" />
+                <Input.Password min={5} placeholder="New Password" />
               </Form.Item>
 
               <Form.Item
-                name="password"
+                name="confirm_password"
+                dependencies={["password"]}
+                hasFeedback
                 rules={[
                   {
                     required: true,
-                    message: "Please input your password!",
+                    message: "Please input your new password!",
                   },
+                  ({ getFieldValue }) => ({
+                    validator(rule, value) {
+                      if (!value || getFieldValue("password") === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(
+                        "The two passwords that you entered do not match!"
+                      );
+                    },
+                  }),
                 ]}
               >
-                <Input.Password placeholder="Password" />
+                <Input.Password placeholder="Confirm New Password" />
               </Form.Item>
 
               <Form.Item>
@@ -124,16 +128,16 @@ export default function SignUp(props) {
                   htmlType="submit"
                   loading={loggingIn}
                 >
-                  Register
+                  Log In
                 </Button>
                 <br />
                 <a
                   onClick={() => {
-                    history.push(process.env.PUBLIC_URL + "/login");
+                    history.replace("/login");
                   }}
                   className="primaryColor"
                 >
-                  Return to Login
+                  Go back to login
                 </a>
               </Form.Item>
             </Form>
@@ -142,7 +146,7 @@ export default function SignUp(props) {
       </div>
       <style jsx>
         {`
-          .signUpWrapper {
+          .resetPassWrapper {
             display: flex;
             justify-content: center;
           }
