@@ -6,7 +6,12 @@ const GameCard = (props) => {
   return (
     <>
       <div
-        style={{ position: "relative", width: "max-content", margin: "20px" }}
+        style={{
+          position: "relative",
+          width: "max-content",
+          height: "max-content",
+          margin: "20px",
+        }}
       >
         <div
           style={{
@@ -25,7 +30,10 @@ const GameCard = (props) => {
             src="https://s1.gaming-cdn.com/images/products/1995/271x377/playerunknowns-battlegrounds-cover.jpg"
             className="gameImg"
           />
-          <h3>Pubg Tournament</h3>
+          <div className="gameName">
+            <h3>Pubg Tournament</h3>|<span>Public</span>
+          </div>
+
           <span className="gameDesc">
             This is description text for game Description This is description
             text for game Description This is description text for game
@@ -58,7 +66,8 @@ const GameCard = (props) => {
         .gameImg {
           height: 140px;
         }
-        .gameInfo {
+        .gameInfo,
+        .gameName {
           display: flex;
           justify-content: space-around;
         }
