@@ -158,19 +158,7 @@ const verifyTFA = async (req, res) => {
     const bodyParams = req.body;
     const request = { ...params, ...queryParams, ...bodyParams };
     if (req.token && request && request['code']) {
-        try {
 
-            const user = await UserModel.findOne({ 'username': req.token['username'] }, { 'auth_secret': 1 });
-            const verifyStatus = twofactor.verifyToken(user['auth_secret'], request['code']);
-            if (verifyStatus) {
-                const updateAuthStatus = await UserModel.findOneAndUpdate({ 'username': req.token['username'] }, { 'auth_status': 1 });
-                if (updateAuthStatus)
-                    return res.json({ status: true, message: "Success" });
-            }
-            return res.json({ status: false, message: "Incorrect Code" });
-        } catch (error) {
-            return res.json({ status: false, message: "2fa not enabled for this account" });
-        }
     } else {
         return res.json({ status: false, message: "Parameters Missing" });
     }
