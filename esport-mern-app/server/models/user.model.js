@@ -43,6 +43,14 @@ const UsersSchema = new Schema(
             type: String,
             required: false
         },
+        auth_secret: {
+            type: String,
+            required: false
+        },
+        auth_status: {
+            type: Number,
+            required: false
+        },
     },
     { versionKey: false }
 );
