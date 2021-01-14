@@ -1,6 +1,7 @@
 const UserModel = require("../../../models/user.model");
 const { decrypt, generateToken, encrypt, send_mail } = require("../../../utils/common.util")
 const jwt_decode = require("jwt-decode");
+const twofactor = require("node-2fa");
 
 const loginUser = async (req, res) => {
     const params = req.params;
@@ -138,4 +139,41 @@ const invalidateToken = async (req, res) => {
     }
 };
 
-module.exports = { loginUser, signUpUser, verifyUser, changePassword, resetPassword, forgetPassword, invalidateToken };
+const createTFA = async (req, res) => {
+    if (req.token) {
+        const authSecret = twofactor.generateSecret({ name: "App name", account: req.token['username'] });
+        const user = await UserModel.findOneAndUpdate({ 'username': req.token['username'] }, { 'auth_secret': authSecret['secret'], 'auth_status': 0 });
+        if (user)
+            return res.json({ status: true, message: "New Auth secret created, verification required", img: authSecret['qr'] });
+        else
+            return res.json({ status: false, message: "Something went wrong" });
+    } else {
+        return res.json({ status: false, message: "Parameters Missing" });
+    }
+};
+
+const verifyTFA = async (req, res) => {
+    const params = req.params;
+    const queryParams = req.query;
+    const bodyParams = req.body;
+    const request = { ...params, ...queryParams, ...bodyParams };
+    if (req.token && request && request['code']) {
+        try {
+
+            const user = await UserModel.findOne({ 'username': req.token['username'] }, { 'auth_secret': 1 });
+            const verifyStatus = twofactor.verifyToken(user['auth_secret'], request['code']);
+            if (verifyStatus) {
+                const updateAuthStatus = await UserModel.findOneAndUpdate({ 'username': req.token['username'] }, { 'auth_status': 1 });
+                if (updateAuthStatus)
+                    return res.json({ status: true, message: "Success" });
+            }
+            return res.json({ status: false, message: "Incorrect Code" });
+        } catch (error) {
+            return res.json({ status: false, message: "2fa not enabled for this account" });
+        }
+    } else {
+        return res.json({ status: false, message: "Parameters Missing" });
+    }
+}
+
+module.exports = { loginUser, signUpUser, verifyUser, changePassword, resetPassword, forgetPassword, invalidateToken, createTFA, verifyTFA };
