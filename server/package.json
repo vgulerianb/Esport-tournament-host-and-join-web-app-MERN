@@ -4,8 +4,8 @@
     "description": "",
     "main": "app.js",
     "scripts": {
-        "dev": "env-cmd -f env/local.env nodemon index.js",
-        "start": "node index.js",
+        "start": "env-cmd -f env/local.env nodemon index.js",
+        "start-dev": "node index.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "keywords": [],
