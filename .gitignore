@@ -1,8 +1,8 @@
 package-lock.json
-esport-mern-app/client/node_modules
-esport-mern-app/server/node_modules
-esport-mern-app/server/config/keys.js
-esport-mern-app/client/build
-esport-mern-app/server/build
-esport-mern-app/server/config/keys.js
+client/node_modules
+node_modules
+config/keys.js
+client/build
+server/build
+server/config/keys.js
 node_modules
