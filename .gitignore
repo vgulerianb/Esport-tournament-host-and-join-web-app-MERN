@@ -5,3 +5,4 @@ client/build
 server/build
 server/config/keys.js
 node_modules
+config/keys.js
