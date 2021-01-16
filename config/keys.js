@@ -3,14 +3,14 @@ module.exports = {
         dev: {
             host: process.env.mongo_host,
             port: process.env.mongo_port,
-            database: process.env.mongo_,
-            username: process.env.mongo_,
-            password: process.env.mongo_,
-            host_1: process.env.mongo_,
-            port_1: process.env.mongo_,
-            host_2: process.env.mongo_,
-            port_2: process.env.mongo_,
-            replicaSet: process.env.mongo_
+            database: process.env.mongo_database,
+            username: process.env.mongo_username,
+            password: process.env.mongo_password,
+            host_1: process.env.mongo_host,
+            port_1: process.env.mongo_port,
+            host_2: process.env.mongo_host,
+            port_2: process.env.mongo_port,
+            replicaSet: process.env.mongo_replicaSet
         },
     },
     mailgun: {
