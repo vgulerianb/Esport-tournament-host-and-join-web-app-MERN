@@ -1,10 +1,11 @@
 const { request } = require("express");
 const express = require("express");
 const router = express.Router();
-const { loginUser, signUpUser, verifyUser, changePassword, resetPassword, forgetPassword, invalidateToken, createTFA, verifyTFA } = require("../services/user.service");
+const { loginUser, signUpUser, verifyUser, changePassword, resetPassword, forgetPassword, invalidateToken, createTFA, verifyTFA, tfaLoginUser } = require("../services/user.service");
 const token = require("../../../utils/jwtVerifier")
 
 router.post("/login", loginUser);
+router.post("/tfa-login", tfaLoginUser);
 router.post("/signup", signUpUser);
 router.post("/verify", verifyUser);
 router.put("/tfa", token.verifyToken, createTFA);
