@@ -11,6 +11,7 @@ import ChangePassword from "./pages/changePassword";
 import VerifyAccount from "./pages/verifyAccount";
 import NotFound from "./pages/notFound";
 import ResetPassword from "./pages/resetPassword";
+import EnableTfa from "./pages/enableTfa";
 
 function App() {
     return (
@@ -22,10 +23,9 @@ function App() {
             <Route path={`${process.env.PUBLIC_URL}/verify-account`} exact component={VerifyAccount} />
             <Route path={`${process.env.PUBLIC_URL}/change-password`} exact component={ChangePassword} />
             <Route path={`${process.env.PUBLIC_URL}/reset-password`} exact component={ResetPassword} />
+            <Route path={`${process.env.PUBLIC_URL}/enable-tfa`} exact component={EnableTfa} />
             <Route exact component={NotFound} />
-
         </Switch>
-
     );
 }
 
