@@ -51,6 +51,10 @@ const UsersSchema = new Schema(
             type: Number,
             required: false
         },
+        auth_id: {
+            type: String,
+            required: false
+        }
     },
     { versionKey: false }
 );
