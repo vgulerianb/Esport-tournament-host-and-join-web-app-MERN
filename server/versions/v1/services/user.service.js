@@ -11,16 +11,43 @@ const loginUser = async (req, res) => {
     if (request && request['username'] && request['password']) {
         const user = await UserModel.findOne({ 'username': request['username'] });
         if (user && request['password'] === decrypt(user['password'])) {
-            if (user['verificationStatus'] === 1) {
+            if (user['verificationStatus'] === 1 && user['auth_status'] !== 1) {
+                let existingSessions = user['jid'] ? user['jid'] : [];
+                let user_token = generateToken({ 'username': user['username'], 'uid': user['uid'], 'role': user['userrole'] });
+                existingSessions.push(user_token['jid'])
+                await UserModel.findOneAndUpdate({ 'username': request['username'] }, { jid: existingSessions });
+                return res.json({ status: true, message: "Success", data: { user_token: user_token['token'] } });
+            } else if (user['auth_status'] === 1) {
+                let AuthId = new Date().getTime() + Math.random().toString(36).substring(2);
+                await UserModel.findOneAndUpdate({ 'username': request['username'] }, { auth_id: AuthId });
+                return res.json({ status: true, message: "Password validated", data: { auth_id: AuthId } });
+            }
+            return res.json({ status: false, message: "Please verify your email address" });
+        }
+        return res.json({ status: false, message: "Wrong Password" });
+    } else {
+        return res.json({ status: false, message: "Parameters Missing" });
+    }
+};
+
+const tfaLoginUser = async (req, res) => {
+    const params = req.params;
+    const queryParams = req.query;
+    const bodyParams = req.body;
+    const request = { ...params, ...queryParams, ...bodyParams };
+    if (request && request['auth_id'] && request['code']) {
+        const user = await UserModel.findOne({ 'auth_id': request['auth_id'] });
+        if (user) {
+            const verifyStatus = twofactor.verifyToken(user['auth_secret'], request['code']);
+            if (verifyStatus) {
                 let existingSessions = user['jid'] ? user['jid'] : [];
                 let user_token = generateToken({ 'username': user['username'], 'uid': user['uid'], 'role': user['userrole'] });
                 existingSessions.push(user_token['jid'])
                 await UserModel.findOneAndUpdate({ 'username': request['username'] }, { jid: existingSessions });
                 return res.json({ status: true, message: "Success", data: { user_token: user_token['token'] } });
             }
-            return res.json({ status: false, message: "Please verify your email address" });
         }
-        return res.json({ status: false, message: "Wrong Password" });
+        return res.json({ status: false, message: "Invalid code" });
     } else {
         return res.json({ status: false, message: "Parameters Missing" });
     }
@@ -176,4 +203,4 @@ const verifyTFA = async (req, res) => {
     }
 }
 
-module.exports = { loginUser, signUpUser, verifyUser, changePassword, resetPassword, forgetPassword, invalidateToken, createTFA, verifyTFA };
+module.exports = { loginUser, signUpUser, verifyUser, changePassword, resetPassword, forgetPassword, invalidateToken, createTFA, verifyTFA, tfaLoginUser };
