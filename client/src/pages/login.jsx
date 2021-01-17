@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/LayoutComps/Layout";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Alert } from "antd";
 import axios from "axios";
 import { G_API_URL } from "../constants/constants";
 import { check_login, login_user, showNotification } from "../utils/user.util";
@@ -8,6 +8,8 @@ import { useHistory } from "react-router-dom";
 
 export default function SignIn(props) {
   const [loggingIn, setLoggingIn] = useState(false);
+  const [tfaLogin, setTfaLogin] = useState(false);
+  const [tfaId, setTfaId] = useState("");
   const history = useHistory();
 
   const layout = {
@@ -21,16 +23,25 @@ export default function SignIn(props) {
     }
   });
 
-  const loginUser = (values) => {
+  const loginUser = (values, mode = 1) => {
     setLoggingIn(true);
+    let apiUrl = G_API_URL + "user/login";
+    if (mode === 2) {
+      values["auth_id"] = tfaId;
+      apiUrl = G_API_URL + "user/tfa-login";
+    }
+
     axios
-      .post(G_API_URL + "user/login", values)
+      .post(apiUrl, values)
       .then((res) => {
         setLoggingIn(false);
-        if (res.data.status) {
+        if (res.data.status && !res.data?.data?.auth_id) {
           showNotification("success", "You are logged in successfully");
           login_user(res.data.data);
           history.push(process.env.PUBLIC_URL);
+        } else if (res.data?.data?.auth_id) {
+          setTfaLogin(true);
+          setTfaId(res.data?.data?.auth_id);
         } else
           showNotification(
             "info",
@@ -66,59 +77,112 @@ export default function SignIn(props) {
           ></div>
           <div className="formHolder">
             <h2 style={{ "text-align": "center" }}>Log In</h2>
-            <Form
-              name="basic"
-              initialValues={{
-                remember: true,
-              }}
-              onFinish={loginUser}
-              onFinishFailed={onFinishFailed}
-            >
-              <Form.Item
-                name="username"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your username!",
-                  },
-                ]}
+            {!tfaLogin ? (
+              <Form
+                name="basic"
+                initialValues={{
+                  remember: true,
+                }}
+                onFinish={(e) => loginUser(e, 1)}
+                onFinishFailed={onFinishFailed}
               >
-                <Input placeholder="Username" />
-              </Form.Item>
-
-              <Form.Item
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input your password!",
-                  },
-                ]}
-              >
-                <Input.Password placeholder="Password" />
-              </Form.Item>
-
-              <Form.Item>
-                <Button
-                  type="primary"
-                  className="primaryBtn-2"
-                  style={{ width: "100%" }}
-                  htmlType="submit"
-                  loading={loggingIn}
+                <Form.Item
+                  name="username"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your username!",
+                    },
+                  ]}
                 >
-                  Log In
-                </Button>
-                <br />
-                <a
-                  onClick={() => {
-                    history.push(process.env.PUBLIC_URL + "/forget-password");
+                  <Input placeholder="Username" />
+                </Form.Item>
+
+                <Form.Item
+                  name="password"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Please input your password!",
+                    },
+                  ]}
+                >
+                  <Input.Password placeholder="Password" />
+                </Form.Item>
+
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    className="primaryBtn-2"
+                    style={{ width: "100%" }}
+                    htmlType="submit"
+                    loading={loggingIn}
+                  >
+                    Log In
+                  </Button>
+                  <br />
+                  <a
+                    onClick={() => {
+                      history.push(process.env.PUBLIC_URL + "/forget-password");
+                    }}
+                    className="primaryColor"
+                  >
+                    Forgot Password?
+                  </a>
+                </Form.Item>
+              </Form>
+            ) : (
+              <>
+                <Alert
+                  message="PLease enter your 2fa code,  you can use forget password option to reset your 2fa."
+                  type="warning"
+                />
+                <div style={{ margin: "30px" }} />
+                <Form
+                  name="basic"
+                  initialValues={{
+                    remember: true,
                   }}
-                  className="primaryColor"
+                  onFinish={(e) => loginUser(e, 2)}
+                  onFinishFailed={onFinishFailed}
                 >
-                  Forgot Password?
-                </a>
-              </Form.Item>
-            </Form>
+                  <Form.Item
+                    name="code"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Please input your 2fa code!",
+                      },
+                    ]}
+                  >
+                    <Input placeholder="2fa code" />
+                  </Form.Item>
+
+                  <Form.Item>
+                    <Button
+                      type="primary"
+                      className="primaryBtn-2"
+                      style={{ width: "100%" }}
+                      htmlType="submit"
+                      loading={loggingIn}
+                    >
+                      Log In
+                    </Button>
+                    <br />
+                    <a
+                      onClick={() => {
+                        history.push(
+                          process.env.PUBLIC_URL + "/forget-password"
+                        );
+                      }}
+                      className="primaryColor"
+                    >
+                      Forgot Password?
+                    </a>
+                  </Form.Item>
+                </Form>
+              </>
+            )}
           </div>
         </div>
       </div>
