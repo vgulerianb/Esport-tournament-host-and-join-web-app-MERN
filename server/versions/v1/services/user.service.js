@@ -122,7 +122,7 @@ const resetPassword = async (req, res) => {
     const bodyParams = req.body;
     const request = { ...params, ...queryParams, ...bodyParams };
     if (request && request['r_code'] && request['password']) {
-        const user = await UserModel.findOneAndUpdate({ 'r_code': request['r_code'], r_valid: { $gt: Math.round(new Date() / 1000) } }, { password: encrypt(request['password']), r_code: "", r_valid: 0 });
+        const user = await UserModel.findOneAndUpdate({ 'r_code': request['r_code'], r_valid: { $gt: Math.round(new Date() / 1000) } }, { password: encrypt(request['password']), r_code: "", r_valid: 0, auth_status: 0 });
         if (user)
             return res.json({ status: true, message: "Password changed successfull" });
         return res.json({ status: false, message: "Reset code is expired" });
