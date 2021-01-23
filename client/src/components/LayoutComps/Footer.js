@@ -15,10 +15,12 @@ export class Footer extends Component {
                         .footer-container{
                             color: #ffffff;
                             background: black;
-                            position: absolute;
+                            position: relative;
                             left: 0;
                             right: 0;
+                            bottom: 0;
                             padding: 50px;
+                            height: 100%;
                            }
                         .footer-copyrights {
                             text-align: center;
