@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/LayoutComps/Layout";
-import { Form, Input, Button, Upload, DatePicker, Switch } from "antd";
+import { Form, Input, Button, Upload, DatePicker, Switch, Spin } from "antd";
 import axios from "axios";
 import { G_API_URL } from "../constants/constants";
 import { check_login, getToken, showNotification } from "../utils/user.util";
@@ -27,14 +27,18 @@ export default function CreateGame(props) {
     console.log("Failed:", errorInfo);
   };
 
-  const onGameCreateInit = (values) => {
+  const onGameCreateInit = async (values) => {
+    setLoggingIn(true);
     if (values?.game_image?.file) {
-      imageFileToBase64(values?.game_image?.file).then(function(base64) {
-        values.game_image = base64;
+      await imageFileToBase64(values?.game_image?.file).then(function(base64) {
+        values["game_image"] = base64;
       });
     }
+    values["start_time"] = new Date(values.game_time[0]).getTime();
+    values["end_time"] = new Date(values.game_time[1]).getTime();
+    console.log(values);
     axios
-      .post(G_API_URL + "api/game", values, {
+      .post(G_API_URL + "game", values, {
         headers: {
           Authorization: getToken(),
         },
@@ -43,8 +47,11 @@ export default function CreateGame(props) {
         if (res.data.status) {
           console.log(res);
         }
+        setLoggingIn(false);
       })
-      .catch(() => {});
+      .catch(() => {
+        setLoggingIn(false);
+      });
   };
 
   const uploadProps = {
@@ -79,112 +86,114 @@ export default function CreateGame(props) {
           ></div>
           <div className="formHolder">
             <h2 style={{ "text-align": "center" }}>Create Game</h2>
-            <Form
-              name="basic"
-              initialValues={{
-                remember: true,
-              }}
-              onFinish={onGameCreateInit}
-              onFinishFailed={onFinishFailed}
-            >
-              <Form.Item
-                name="game_name"
-                rules={[
-                  {
-                    required: true,
-                    message: "Game name is required",
-                  },
-                ]}
+            <Spin tip="Saving..." spinning={loggingIn}>
+              <Form
+                name="basic"
+                initialValues={{
+                  remember: true,
+                }}
+                onFinish={onGameCreateInit}
+                onFinishFailed={onFinishFailed}
               >
-                <Input placeholder="Game Name" />
-              </Form.Item>
-
-              <Form.Item
-                name="game_description"
-                rules={[
-                  {
-                    required: true,
-                    message: "Game description is required",
-                  },
-                ]}
-              >
-                <Input.TextArea rows={5} placeholder="Game description" />
-              </Form.Item>
-              <Form.Item
-                name="game_time"
-                rules={[
-                  {
-                    required: true,
-                    message: "Game start & end time is required",
-                  },
-                ]}
-              >
-                <DatePicker.RangePicker
-                  placeholder={["Game Start Time", "Game End Time"]}
-                  showTime
-                />
-              </Form.Item>
-              <Form.Item
-                name="game_user_limit"
-                rules={[
-                  {
-                    required: true,
-                    message: "Game registeration limit is required",
-                  },
-                ]}
-              >
-                <Input placeholder="Registeration Limit" />
-              </Form.Item>
-
-              <Form.Item name="game_image">
-                <Upload {...uploadProps}>
-                  <Button>Select Game Image</Button>
-                </Upload>
-              </Form.Item>
-              <Form.Item label="Game Type">
-                <Switch
-                  onChange={() => {}}
-                  checkedChildren="Private game"
-                  unCheckedChildren="Public Game"
-                />
-              </Form.Item>
-
-              <Form.Item
-                name="game_join_info"
-                rules={[
-                  {
-                    required: true,
-                    message: "Game join info is required",
-                  },
-                ]}
-              >
-                <Input.TextArea rows={5} placeholder="Join information" />
-              </Form.Item>
-              <Form.Item
-                label="Join code will be available to users 1 hr before the game"
-                name="game_join_code"
-                rules={[
-                  {
-                    required: false,
-                    message: "Game description is required",
-                  },
-                ]}
-              >
-                <Input placeholder="Join code" />
-              </Form.Item>
-              <Form.Item>
-                <Button
-                  type="primary"
-                  className="primaryBtn-2"
-                  style={{ width: "100%" }}
-                  htmlType="submit"
-                  loading={loggingIn}
+                <Form.Item
+                  name="game_name"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Game name is required",
+                    },
+                  ]}
                 >
-                  Create Game
-                </Button>
-                <br />
-              </Form.Item>
-            </Form>
+                  <Input placeholder="Game Name" />
+                </Form.Item>
+
+                <Form.Item
+                  name="game_description"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Game description is required",
+                    },
+                  ]}
+                >
+                  <Input.TextArea rows={5} placeholder="Game description" />
+                </Form.Item>
+                <Form.Item
+                  name="game_time"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Game start & end time is required",
+                    },
+                  ]}
+                >
+                  <DatePicker.RangePicker
+                    placeholder={["Game Start Time", "Game End Time"]}
+                    showTime
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="game_user_limit"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Game registeration limit is required",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Registeration Limit" />
+                </Form.Item>
+
+                <Form.Item name="game_image">
+                  <Upload {...uploadProps}>
+                    <Button>Select Game Image</Button>
+                  </Upload>
+                </Form.Item>
+                <Form.Item label="Game Type" name="game_type">
+                  <Switch
+                    onChange={() => {}}
+                    checkedChildren="Private game"
+                    unCheckedChildren="Public Game"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  name="joining_description"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Game join info is required",
+                    },
+                  ]}
+                >
+                  <Input.TextArea rows={5} placeholder="Join information" />
+                </Form.Item>
+                <Form.Item
+                  label="Join code will be available to users 1 hr before the game"
+                  name="join_code"
+                  rules={[
+                    {
+                      required: false,
+                      message: "Game description is required",
+                    },
+                  ]}
+                >
+                  <Input placeholder="Join code" />
+                </Form.Item>
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    className="primaryBtn-2"
+                    style={{ width: "100%" }}
+                    htmlType="submit"
+                    loading={loggingIn}
+                  >
+                    Create Game
+                  </Button>
+                  <br />
+                </Form.Item>
+              </Form>
+            </Spin>
           </div>
         </div>
       </div>
