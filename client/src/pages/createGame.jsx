@@ -33,7 +33,18 @@ export default function CreateGame(props) {
         values.game_image = base64;
       });
     }
-    console.log(values);
+    axios
+      .post(G_API_URL + "api/game", values, {
+        headers: {
+          Authorization: getToken(),
+        },
+      })
+      .then((res) => {
+        if (res.data.status) {
+          console.log(res);
+        }
+      })
+      .catch(() => {});
   };
 
   const uploadProps = {
