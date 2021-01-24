@@ -11,6 +11,10 @@ const GamesSchema = new Schema(
             type: String,
             required: true
         },
+        game_image: {
+            type: String,
+            required: true
+        },
         game_slug: {
             type: String,
             required: true
@@ -28,6 +32,10 @@ const GamesSchema = new Schema(
             required: false
         },
         start_time: {
+            type: Number,
+            required: false
+        },
+        end_time: {
             type: Number,
             required: false
         },

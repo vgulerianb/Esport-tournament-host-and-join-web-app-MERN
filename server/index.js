@@ -7,10 +7,10 @@ const cors = require("cors");
 
 const APP_URL = path.resolve(__dirname, "../client/build");
 const APP_URL_HOME = path.resolve(__dirname, "../client/build/index.html");
-let dir = __dirname.replace("/server","/client/");
+let dir = __dirname.replace("/server", "/client/");
 // compress all responses
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.json({ limit: '50mb', extended: true }));
+app.use(express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 app.use(express.text());
 app.use(cors());
 app.use("/api/", versionRouter);
