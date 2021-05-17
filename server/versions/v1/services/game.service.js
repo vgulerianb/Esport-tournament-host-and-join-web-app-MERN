@@ -1,4 +1,5 @@
 const GameModal = require("../../../models/game.model");
+const GamesHistorySchema = require("../../../models/history.model");
 const slugify = require("slugify");
 
 const getGames = async (req, res) => {
@@ -51,5 +52,39 @@ const EditGame = async (req, res) => {
     return res.json({ status: false, message: "Required parameters missing" })
 };
 
+const joinGame = async (req, res) => {
+    const params = req.params;
+    const queryParams = req.query;
+    const bodyParams = req.body;
+    const request = { ...params, ...queryParams, ...bodyParams };
+    if (request && req['token']['uid'] && request['game_id']) {
+        let gameDetails = await GameModal.findOne({ game_id: request['game_id'] })
+        gameDetails['userId'] = req['token']['uid']
+        let gameHistrory = await GamesHistorySchema.updateOne({ user: req['token']['uid'] }, request, { upsert: true })
+        if (gameHistrory)
+            return res.json({ status: true, message: "Game joined successfully" })
+        else
+            return res.json({ status: false, message: "Something went wrong, provided game id maybe invalid or you donot have access to edit this game" })
 
-module.exports = { getGames, createGame, EditGame };
+    }
+    return res.json({ status: false, message: "Required parameters missing" })
+};
+
+const userGames = async (req, res) => {
+    const params = req.params;
+    const queryParams = req.query;
+    const bodyParams = req.body;
+    const request = { ...params, ...queryParams, ...bodyParams };
+    if (request && req['token']['uid'] && request['game_id']) {
+        let gameHistory = await GamesHistorySchema.find({ user: req['token']['uid'] })
+        if (gameHistory)
+            return res.json({ status: true, message: "Games fetched successfully", data: gameHistory })
+        else
+            return res.json({ status: false, message: "Something went wrong, provided game id maybe invalid or you donot have access to edit this game" })
+
+    }
+    return res.json({ status: false, message: "Required parameters missing" })
+};
+
+
+module.exports = { getGames, createGame, EditGame, joinGame, userGames };
