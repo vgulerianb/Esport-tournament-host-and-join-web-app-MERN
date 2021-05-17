@@ -7,7 +7,7 @@ import { check_login } from "../utils/user.util";
 
 class Hello extends Component {
   state = {
-    name: "",
+    activityDrawer: false,
   };
 
   componentDidMount() {}
@@ -21,16 +21,30 @@ class Hello extends Component {
             <GameCard /> <GameCard /> <GameCard /> <GameCard />
           </div>
           {check_login() ? (
-            <Drawer>
-              <div className="newsWrapper">
+            <>
+              <Drawer
+                visible={this.state.activityDrawer}
+                onClose={() => this.setState({ activityDrawer: false })}
+                width={"440px"}
+              >
                 <NewsGameCard />
                 <NewsGameCard />
                 <NewsGameCard />
                 <NewsGameCard />
                 <NewsGameCard />
                 <NewsGameCard />
-              </div>
-            </Drawer>
+              </Drawer>
+              <Button
+                className="floatBtn"
+                onClick={() => {
+                  this.setState({
+                    activityDrawer: !this.state.activityDrawer,
+                  });
+                }}
+              >
+                My Activity
+              </Button>
+            </>
           ) : (
             ""
           )}
@@ -44,8 +58,18 @@ class Hello extends Component {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
           }
-          .newsWrapper {
-            flex: 2;
+          .floatBtn {
+            position: fixed;
+            width: 125px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background-color: #0c9;
+            color: #fff;
+            border-radius: 50px;
+            text-align: center;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 10;
           }
         `}</style>
       </Layout>
