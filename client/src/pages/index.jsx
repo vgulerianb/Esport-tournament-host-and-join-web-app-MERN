@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import GameCard from "../components/cardComp/gameCard";
 import NewsGameCard from "../components/cardComp/newsGameCardWrapper";
 import Layout from "../components/LayoutComps/Layout";
+import { Drawer, Button } from "antd";
+import { check_login } from "../utils/user.util";
 
 class Hello extends Component {
   state = {
@@ -18,14 +20,20 @@ class Hello extends Component {
             <GameCard />
             <GameCard /> <GameCard /> <GameCard /> <GameCard />
           </div>
-          <div className="newsWrapper">
-            <NewsGameCard />
-            <NewsGameCard />
-            <NewsGameCard />
-            <NewsGameCard />
-            <NewsGameCard />
-            <NewsGameCard />
-          </div>
+          {check_login() ? (
+            <Drawer>
+              <div className="newsWrapper">
+                <NewsGameCard />
+                <NewsGameCard />
+                <NewsGameCard />
+                <NewsGameCard />
+                <NewsGameCard />
+                <NewsGameCard />
+              </div>
+            </Drawer>
+          ) : (
+            ""
+          )}
         </div>
         <style jsx>{`
           .mainWrapper {
