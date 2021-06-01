@@ -67,7 +67,7 @@ const signUpUser = async (req, res) => {
                 request['userrole'] = request['mode'] && request['mode'] === 1 ? 'vendor' : 'user';
                 request['uid'] = uid['uid'] + 1;
                 request['password'] = encrypt(request['password']);
-                request['verificationStatus'] = 1;
+                request['verificationStatus'] = 0;
                 request['v_code'] = "vcode_" + request['uid'] + "_" + Math.round(Math.random() * 100000) + "_" + new Date().getTime();
                 send_mail(request['username'], "Account Verification Required", "Account Verification", "This is description to Account Verification desc", "https://vgesport.herokuapp.com/verify-account/?vcode=" + request['v_code'], "Verify Account");
                 const user = await UserModel.create(request);
