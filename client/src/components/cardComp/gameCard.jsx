@@ -13,18 +13,7 @@ const GameCard = (props) => {
           margin: "20px",
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            background: "rgb(254, 141, 27) none repeat scroll 0% 0%",
-            width: "50px",
-            height: "50px",
-            bottom: "-8px",
-            left: "-8px",
-            "border-radius": "15px",
-            "z-index": 0,
-          }}
-        ></div>
+        <div className="bottomBox"></div>
         <div className="gameCardWrapper">
           <img
             src="https://s1.gaming-cdn.com/images/products/1995/271x377/playerunknowns-battlegrounds-cover.jpg"
@@ -74,6 +63,16 @@ const GameCard = (props) => {
         .gameDesc {
           height: 90px;
           overflow: hidden;
+        }
+        .bottomBox {
+          position: absolute;
+          background: rgb(254, 141, 27) none repeat scroll 0% 0%;
+          width: 50px;
+          height: 50px;
+          bottom: -8px;
+          left: -8px;
+          border-radius: 15px;
+          z-index: 0;
         }
       `}</style>
     </>

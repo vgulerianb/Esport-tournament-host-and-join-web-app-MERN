@@ -25,7 +25,7 @@ class Hello extends Component {
               <Drawer
                 visible={this.state.activityDrawer}
                 onClose={() => this.setState({ activityDrawer: false })}
-                width={"440px"}
+                className="my-drawer"
               >
                 <NewsGameCard />
                 <NewsGameCard />
@@ -56,7 +56,7 @@ class Hello extends Component {
           .gameListing {
             flex: 8;
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, auto));
           }
           .floatBtn {
             position: fixed;
@@ -70,6 +70,49 @@ class Hello extends Component {
             text-align: center;
             box-shadow: 2px 2px 3px #999;
             z-index: 10;
+          }
+          .ant-drawer-content-wrapper {
+            width: 256px !important;
+          }
+
+          @media screen and (max-width: 600px) {
+            .gameCardWrapper {
+              width: 200px;
+              height: 300px;
+              font-size: 12px;
+            }
+            .gameListing {
+              grid-template-columns: repeat(auto-fill, minmax(200px, auto));
+            }
+            .floatBtn {
+              width: 80px;
+              height: 42px;
+              font-size: 11px;
+            }
+            .ant-drawer-content-wrapper {
+              width: 100% !important;
+            }
+            .newsgameCardWrapper {
+              height: 78px !important;
+              width: 308px !important;
+            }
+          }
+          @media screen and (max-width: 400px) {
+            .gameCardWrapper {
+              width: 160px;
+              height: 240px;
+              font-size: 10px;
+            }
+            .gameListing {
+              grid-template-columns: repeat(auto-fill, minmax(160px, auto));
+            }
+            .layoutBody {
+              padding-right: 15px !important;
+              padding-left: 0px !important;
+            }
+            .bottomBox {
+              visibility: hidden;
+            }
           }
         `}</style>
       </Layout>
