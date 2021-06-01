@@ -18,6 +18,7 @@ switch (env) {
         connectionString = `mongodb://${conf.username}:${encodeURIComponent(conf.password)}@${conf.host}:${conf.port},${conf.host_1}:${conf.port_1},${conf.host_2}:${conf.port_2}/${conf.database}?ssl=true&replicaSet=${conf.replicaSet}&readPreference=secondaryPreferred&authSource=admin`;
         break;
 }
+console.log(env);
 
 mongoose.connect(connectionString).catch(e => {
     console.error(e);

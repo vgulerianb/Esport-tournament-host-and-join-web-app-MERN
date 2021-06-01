@@ -1,8 +1,12 @@
 const mongoose = require('../config/connection.mongo');
 const Schema = mongoose.Schema;
 
-const GamesSchema = new Schema(
+const GamesHistorySchema = new Schema(
     {
+        user: {
+            type: String,
+            required: true
+        },
         game_id: {
             type: Number,
             required: true
@@ -38,21 +42,9 @@ const GamesSchema = new Schema(
         end_time: {
             type: Number,
             required: false
-        },
-        joining_description: {
-            type: String,
-            required: false
-        },
-        join_code: {
-            type: String,
-            required: false
-        },
-        invite_code: {
-            type: String,
-            required: false
         }
     },
     { versionKey: false }
 );
 
-module.exports = Game = mongoose.model('es_games', GamesSchema);
+module.exports = Game = mongoose.model('es_games_history', GamesHistorySchema);

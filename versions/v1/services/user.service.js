@@ -43,7 +43,7 @@ const tfaLoginUser = async (req, res) => {
                 let existingSessions = user['jid'] ? user['jid'] : [];
                 let user_token = generateToken({ 'username': user['username'], 'uid': user['uid'], 'role': user['userrole'] });
                 existingSessions.push(user_token['jid'])
-                await UserModel.findOneAndUpdate({ 'username': request['username'] }, { jid: existingSessions });
+                await UserModel.findOneAndUpdate({ 'username': user['username'] }, { jid: existingSessions });
                 return res.json({ status: true, message: "Success", data: { user_token: user_token['token'] } });
             }
         }
