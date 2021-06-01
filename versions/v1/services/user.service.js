@@ -67,7 +67,7 @@ const signUpUser = async (req, res) => {
                 request['userrole'] = request['mode'] && request['mode'] === 1 ? 'vendor' : 'user';
                 request['uid'] = uid['uid'] + 1;
                 request['password'] = encrypt(request['password']);
-                request['verification_status'] = 0;
+                request['verification_status'] = 1;
                 request['v_code'] = "vcode_" + request['uid'] + "_" + Math.round(Math.random() * 100000) + "_" + new Date().getTime();
                 send_mail(request['username'], "Account Verification Required", "Account Verification", "This is description to Account Verification desc", "http://localhost:5000/verify-account/?vcode=" + request['v_code'], "Verify Account");
                 const user = await UserModel.create(request);
