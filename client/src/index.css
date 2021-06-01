@@ -27,3 +27,9 @@
 .ant-btn {
   display: inline-block !important;
 }
+
+@media screen and (max-width: 600px) {
+  .formHolder {
+    width: auto !important;
+  }
+}
