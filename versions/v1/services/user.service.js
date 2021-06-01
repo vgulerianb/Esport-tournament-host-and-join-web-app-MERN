@@ -69,7 +69,7 @@ const signUpUser = async (req, res) => {
                 request['password'] = encrypt(request['password']);
                 request['verificationStatus'] = 1;
                 request['v_code'] = "vcode_" + request['uid'] + "_" + Math.round(Math.random() * 100000) + "_" + new Date().getTime();
-                send_mail(request['username'], "Account Verification Required", "Account Verification", "This is description to Account Verification desc", "http://localhost:5000/verify-account/?vcode=" + request['v_code'], "Verify Account");
+                send_mail(request['username'], "Account Verification Required", "Account Verification", "This is description to Account Verification desc", "https://vgesport.herokuapp.com/verify-account/?vcode=" + request['v_code'], "Verify Account");
                 const user = await UserModel.create(request);
                 return res.json({ status: true, message: "User added successfully" });
             } else
@@ -106,7 +106,7 @@ const forgetPassword = async (req, res) => {
         let validity = Math.round((new Date().getTime() / 1000) + 3600);
         const user = await UserModel.findOneAndUpdate({ 'username': request['username'] }, { r_code: reset_code, r_valid: validity });
         if (user) {
-            send_mail(request['username'], "Reset Password", "Reset Password", "This is description to reset password", "http://localhost:5000/reset-password/?r_code=" + reset_code, "Reset Password");
+            send_mail(request['username'], "Reset Password", "Reset Password", "This is description to reset password", "https://vgesport.herokuapp.com/reset-password/?r_code=" + reset_code, "Reset Password");
             return res.json({ status: true, message: "Reset code sent successfull" });
         }
         return res.json({ status: false, message: "Something went wrong" });
