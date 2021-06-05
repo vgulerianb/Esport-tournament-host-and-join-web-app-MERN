@@ -1,8 +1,15 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import { check_login, showNotification } from "../../utils/user.util";
 
 const GameCard = (props) => {
   const history = useHistory();
+  const handleGameCardClick = () => {
+    if (!check_login()) {
+      showNotification("info", "You need to login to join a game");
+      history.push(process.env.PUBLIC_URL + "login");
+    } else showNotification("info", "Oops unable to join game");
+  };
   return (
     <>
       <div
@@ -12,24 +19,19 @@ const GameCard = (props) => {
           height: "max-content",
           margin: "20px",
         }}
+        onClick={handleGameCardClick}
       >
         <div className="bottomBox"></div>
         <div className="gameCardWrapper">
-          <img
-            src="https://s1.gaming-cdn.com/images/products/1995/271x377/playerunknowns-battlegrounds-cover.jpg"
-            className="gameImg"
-          />
+          <img src={props.image} className="gameImg" />
           <div className="gameName">
-            <h3>Pubg Tournament</h3>|<span>Public</span>
+            <h3>{props.name}</h3>|<span>Public</span>
           </div>
 
-          <span className="gameDesc">
-            This is description text for game Description This is description
-            text for game Description This is description text for game
-            Description This is description text for game Description
-          </span>
+          <span className="gameDesc">{props.description}</span>
           <div className="gameInfo">
-            <span>By: Vikrant</span>|<span>44 Slots Left</span>
+            <span>By: {props.author}</span>|
+            <span>{props.slots ?? 100} Slots Left</span>
           </div>
         </div>
       </div>

@@ -30,6 +30,6 @@
 
 @media screen and (max-width: 600px) {
   .formHolder {
-    width: auto !important;
+    width: 100% !important;
   }
 }
