@@ -21,7 +21,7 @@ export class Layout extends Component {
                     <div style={{ 'flex': 1 }}>
                         <Header />
                     </div>
-                    <div className="layoutBody" style={{ padding: '50px', 'flex': 8 }} >
+                    <div className="layoutBody" >
                         {this.props.children}
                     </div>
                     <div style={{ 'flex': 1 }}>
@@ -33,6 +33,16 @@ export class Layout extends Component {
                     #root{
                         height: 100%;
                     }
+                    .layoutBody {
+                        padding: 50px;
+                        flex: 8;
+                     }
+                    @media screen and (max-width: 600px) {
+                        .layoutBody {
+                            padding-right: 0px;
+                            padding-left: 0px;
+                        }
+                     }
                     `
                 }
                 </style>
